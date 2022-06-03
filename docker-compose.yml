@@ -21,6 +21,7 @@ services:
               args:
                 ELK_VERSION: $ELK_VERSION
             volumes:
+              - ./elasticsearch/data:/usr/share/elasticsearch/data:rw
               - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
               - "./elasticsearch/roles.yml:/usr/share/elasticsearch/config/roles.yml"
               - "./elasticsearch/users:/usr/share/elasticsearch/config/users"
@@ -46,6 +47,7 @@ services:
               args:
                 ELK_VERSION: $ELK_VERSION
             volumes:
+              - ./kibana/data:/usr/share/kibana/data:rw
               - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
             ports:
               - "5601:5601"

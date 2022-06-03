@@ -1,0 +1,66 @@
+server.name: kibana
+server.host: 0.0.0.0
+elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+monitoring.ui.container.elasticsearch.enabled: true
+
+## X-Pack security credentials
+#
+elasticsearch.username: kibana_system
+elasticsearch.password: ${KIBANA_SYSTEM_PASSWORD}
+
+xpack.fleet.agents.fleet_server.hosts: ["http://fleet-server:8220"]
+xpack.fleet.agents.kibana.hosts: ["http://kibana:5601"]
+xpack.fleet.agents.tlsCheckDisabled: true
+
+xpack.security.authc.providers:
+    basic.basic1:
+        order: 1
+xpack.fleet.agents.enabled: true
+xpack.fleet.packages:
+    - name: system
+      version: latest
+    - name: elastic_agent
+      version: latest
+    - name: apm
+      version: latest
+    - name: fleet_server
+      version: latest
+
+xpack.fleet.agentPolicies:
+    - name: Fleet Server + APM policy
+      id: fleet-server-apm-policy
+      description: Fleet server policy with APM and System logs and metrics enabled
+      namespace: default
+      is_default_fleet_server: true
+      is_managed: false
+      monitoring_enabled:
+          - logs
+          - metrics
+      package_policies:
+          - name: apm-1
+            id: default-apm
+            package:
+                name: apm
+            inputs:
+                - type: apm
+                  keep_enabled: true
+                  vars:
+                      - name: host
+                        value: 0.0.0.0:8200
+                        frozen: true
+                      - name: url
+                        value: http://fleet-server:8200
+                        frozen: true
+          - name: Fleet Server
+            package:
+                name: fleet_server
+            inputs:
+                - type: fleet-server
+                  keep_enabled: true
+                  vars:
+                      - name: host
+                        value: 0.0.0.0
+                        frozen: true
+                      - name: port
+                        value: 8220
+                        frozen: true

@@ -1,15 +1,21 @@
+---
 server.name: kibana
-server.host: 0.0.0.0
-elasticsearch.hosts: [ "http://elasticsearch:9200" ]
-monitoring.ui.container.elasticsearch.enabled: true
+server.host: "0.0.0.0"
 
-## X-Pack security credentials
-#
-elasticsearch.username: kibana_system
-elasticsearch.password: ${KIBANA_SYSTEM_PASSWORD}
+telemetry.enabled: false
 
+elasticsearch.hosts: "${ELASTICSEARCH_HOSTS}"
+elasticsearch.username: "${ELASTICSEARCH_USERNAME}"
+elasticsearch.password: "${ELASTICSEARCH_PASSWORD}"
+xpack.monitoring.ui.container.elasticsearch.enabled: true
+
+xpack.fleet.registryUrl: "https://epr-staging.elastic.co"
+xpack.fleet.agents.elasticsearch.host: "${ELASTICSEARCH_HOSTS}"
 xpack.fleet.agents.fleet_server.hosts: ["http://fleet-server:8220"]
 xpack.fleet.agents.kibana.hosts: ["http://kibana:5601"]
+
+xpack.encryptedSavedObjects.encryptionKey: "12345678901234567890123456789012"
+xpack.security.encryptionKey: "12345678901234567890123456789012"
 xpack.fleet.agents.tlsCheckDisabled: true
 
 xpack.security.authc.providers:
